@@ -33,7 +33,7 @@ if (process.platform === 'win32') {
       child.on('exit', (code) =>
         code === 0
           ? resolve()
-          : reject(new Error(`pg_ctl terminó con código ${code}. Revisa .local-db/server.log.`)),
+          : reject(new Error(`pg_ctl terminó con código ${code}. Revisa postgres.local.log.`)),
       );
     });
   if (process.argv.includes('--stop')) {
@@ -49,7 +49,7 @@ if (process.platform === 'win32') {
         '-D',
         '.local-db',
         '-l',
-        '.local-db/server.log',
+        'postgres.local.log',
         '-o',
         '-p 55432 -h 127.0.0.1',
         '-w',
