@@ -1,0 +1,57 @@
+{
+  "name": "gozo-banking",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "prisma generate && next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:demo": "tsx scripts/seed-demo.ts",
+    "db:bootstrap": "tsx scripts/bootstrap.ts",
+    "db:local": "node scripts/local-postgres.mjs",
+    "sync": "node --conditions=react-server --import tsx scripts/sync.ts",
+    "user:create": "tsx scripts/create-user.ts",
+    "format": "prettier --write src scripts tests *.ts *.mjs *.json README.md docs .github",
+    "db:stop": "node scripts/local-postgres.mjs --stop"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "@radix-ui/react-select": "^2.2.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.577.0",
+    "next": "16.3.8",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "dotenv": "^17.3.0",
+    "embedded-postgres": "18.4.0-beta.17",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.3.8",
+    "prettier": "^3.9.9",
+    "prisma": "6.19.3",
+    "tailwindcss": "^4.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "type": "module",
+  "overrides": {
+    "deepmerge-ts": "8.0.2"
+  }
+}

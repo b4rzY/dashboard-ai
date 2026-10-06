@@ -1,0 +1,7 @@
+node_modules
+.next
+.local-db
+package-lock.json
+prisma/migrations
+demo-access.local.txt
+.env
