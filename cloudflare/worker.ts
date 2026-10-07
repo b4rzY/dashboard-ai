@@ -11,7 +11,7 @@ type Environment = {
 type Context = { waitUntil(promise: Promise<unknown>): void };
 
 async function fetchWithDatabase(request: Request, env: Environment, ctx: Context) {
-  const client = createDb(env.HYPERDRIVE?.connectionString ?? env.DATABASE_URL ?? '', 2);
+  const client = createDb(env.HYPERDRIVE?.connectionString ?? env.DATABASE_URL ?? '', 5);
   let disconnected = false;
   const disconnect = () => {
     if (!disconnected) {
