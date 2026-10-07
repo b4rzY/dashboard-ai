@@ -23,15 +23,20 @@
     "sync": "node --conditions=react-server --import tsx scripts/sync.ts",
     "user:create": "tsx scripts/create-user.ts",
     "format": "prettier --write src scripts tests *.ts *.mjs *.json README.md docs .github",
-    "db:stop": "node scripts/local-postgres.mjs --stop"
+    "db:stop": "node scripts/local-postgres.mjs --stop",
+    "cloudflare:build": "prisma generate && opennextjs-cloudflare build && node scripts/cloudflare-clean.mjs",
+    "cloudflare:preview": "node scripts/cloudflare-clean.mjs && opennextjs-cloudflare preview",
+    "cloudflare:deploy": "node scripts/cloudflare-clean.mjs && opennextjs-cloudflare deploy"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^6.19.3",
     "@prisma/client": "6.19.3",
     "@radix-ui/react-select": "^2.2.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
     "next": "16.3.8",
+    "pg": "^8.23.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "recharts": "^3.8.0",
@@ -40,6 +45,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.9",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.0",
@@ -53,7 +59,8 @@
     "tailwindcss": "^4.2.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "wrangler": "^4.148.0"
   },
   "type": "module",
   "overrides": {

@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { parse } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 class SetupError extends Error {}
 
@@ -78,14 +79,16 @@ async function main() {
       throw new SetupError('La inicialización automática solo crea la base local gozo_fintoc.');
     const adminUrl = new URL(url);
     adminUrl.pathname = '/postgres';
-    const admin = new PrismaClient({ datasourceUrl: adminUrl.toString() });
+    const admin = new PrismaClient({
+      adapter: new PrismaPg({ connectionString: adminUrl.toString() }),
+    });
     try {
       const found = await admin.$queryRaw`SELECT 1 FROM pg_database WHERE datname = 'gozo_fintoc'`;
       if (!found.length) await admin.$executeRawUnsafe('CREATE DATABASE gozo_fintoc');
     } finally {
       await admin.$disconnect();
     }
-    const db = new PrismaClient({ datasourceUrl: env.DATABASE_URL });
+    const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: env.DATABASE_URL }) });
     try {
       const tables =
         await db.$queryRaw`SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Transaction'`;

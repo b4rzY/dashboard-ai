@@ -4,5 +4,12 @@ import ts from 'eslint-config-next/typescript';
 export default defineConfig([
   ...next,
   ...ts,
-  globalIgnores(['.next/**', 'node_modules/**', 'coverage/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    '.open-next/**',
+    '.wrangler/**',
+    'node_modules/**',
+    'coverage/**',
+    'next-env.d.ts',
+  ]),
 ]);

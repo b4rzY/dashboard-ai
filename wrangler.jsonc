@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dashboard-ai",
+  "account_id": "7f5fef68042d3f953dbd43101b6211ab",
+  "main": "cloudflare/worker.ts",
+  "compatibility_date": "2026-08-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "observability": { "enabled": true },
+  "vars": {
+    "APP_URL": "https://dashboard-ai.gbozzo.workers.dev",
+    "DEMO_MODE": "false",
+    "CLOUDFLARE_WORKER": "true",
+  },
+  "triggers": { "crons": ["0 */4 * * *", "*/10 * * * *"] },
+}

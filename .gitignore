@@ -8,3 +8,7 @@ coverage/
 .local-db/
 *.log
 demo-access.local.txt
+.open-next/
+.wrangler/
+.dev.vars*
+!.dev.vars.example

@@ -120,6 +120,10 @@ Ver [documentación de integración](docs/fintoc.md) para las referencias oficia
 
 El cron frecuente necesita un plan de Vercel que lo permita o un scheduler externo. No confundir **importar datos existentes** con solicitar un refresh al banco: este MVP no llama refresh intents bajo demanda, porque dependen de la política contratada y MFA. La importación manual lee lo disponible en Fintoc.
 
+### Deploy en Cloudflare
+
+La configuración de Workers y OpenNext está incluida. Sigue [Cloudflare + Neon](docs/cloudflare.md) para conectar el repositorio, configurar secretos e inicializar PostgreSQL. `npm run cloudflare:build` compila el backend completo y elimina las credenciales locales del bundle; `cloudflare:preview` y `cloudflare:deploy` vuelven a comprobarlo. La creación remota de Worker/Neon y la conexión GitHub requieren acceso a esas cuentas.
+
 ### Deploy en Vercel
 
 Importa este repositorio como proyecto Next.js con raíz en el repositorio. Configura PostgreSQL administrado y las variables exclusivamente en el servidor. Ejecuta `prisma migrate deploy` en un paso de release antes de servir tráfico; el build genera Prisma pero no modifica una base. Ejecuta bootstrap y primer sync en un entorno administrativo con la misma base/variables. Define `APP_URL` con el dominio final; las previews necesitan un origen y una base separados. No publiques los datos demo como si fueran información real.
