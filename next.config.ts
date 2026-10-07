@@ -2,6 +2,8 @@ import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ['@prisma/client'],
+  // Node tracing selects pg-cloudflare's empty export; Workers need its socket implementation.
+  outputFileTracingIncludes: { '/*': ['./node_modules/pg-cloudflare/**/*'] },
   async headers() {
     return [
       {

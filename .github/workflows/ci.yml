@@ -39,5 +39,5 @@ jobs:
       - run: npm test
       - run: npm run test:integration
       - run: npm audit --omit=dev
-      - run: npm run build
       - run: npm run cloudflare:build
+      - run: npx wrangler deploy --dry-run
