@@ -53,6 +53,26 @@ En Windows `npm run db:stop` detiene solo el PostgreSQL del directorio `.local-d
 
 ## Ambiente real
 
+### Primera conexión local con Fintoc
+
+La copia `dashboard-gozo.html` es estática. Para consultar datos importados usa la aplicación con backend. El entorno local bancario mantiene una base `gozo_fintoc` distinta de la demo y un archivo privado `.env.fintoc.local`, excluido de Git.
+
+```sh
+npm run db:local
+npm run fintoc:prepare
+npm run fintoc:init
+```
+
+Completa en `.env.fintoc.local` la `FINTOC_SECRET_KEY` y los `FINTOC_LINK_*` disponibles con valores completos. No compartas el archivo. `fintoc:prepare` conserva el archivo si ya existe; la contraseña inicial de `admin@gozo.local` se genera en ese archivo. La inicialización se niega a modificar una base que ya tenga movimientos.
+
+```sh
+npm run fintoc:check
+npm run fintoc:sync
+npm run fintoc:start
+```
+
+Abre `http://localhost:3002`. `fintoc:check` comprueba autorización, cuentas y correspondencia del banco para cada token configurado; `fintoc:sync` persiste las conexiones configuradas y devuelve error si alguna falla. Las conexiones sin token permanecen pendientes. Los comandos no imprimen secretos ni saldos. El servidor necesita un build previo (`npm run build`), escucha solo en loopback y lee el entorno privado al iniciarse: reinícialo si cambias credenciales. Este entorno local no constituye un despliegue de producción ni configura automáticamente webhooks o un scheduler.
+
 Usa **otra base de datos** para producción; no cambies una base demo a real.
 
 1. Copia `.env.example` a `.env` y configura PostgreSQL administrado con TLS, `APP_URL` con el origen HTTPS exacto y `DEMO_MODE=false`.

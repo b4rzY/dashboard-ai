@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "fintoc:prepare": "node scripts/fintoc-live.mjs prepare",
+    "fintoc:init": "node scripts/fintoc-live.mjs init",
+    "fintoc:check": "node scripts/fintoc-live.mjs check",
+    "fintoc:sync": "node scripts/fintoc-live.mjs sync",
+    "fintoc:start": "node scripts/fintoc-live.mjs start",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "prisma generate && next build",
     "start": "next start --hostname 127.0.0.1",
