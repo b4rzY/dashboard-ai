@@ -324,4 +324,25 @@ model AlertRule {
   type          String
   enabled       Boolean @default(false)
   configuration Json
+
+  @@unique([holdingId, type])
+}
+
+model AlertEvent {
+  id            String    @id @default(cuid())
+  holdingId     String
+  type          String
+  severity      String
+  title         String
+  message       String
+  companyId     String?
+  connectionId  String?
+  transactionId String?
+  resourceUrl   String?
+  fingerprint   String    @unique
+  readAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([holdingId, readAt, createdAt])
+  @@index([holdingId, type, createdAt])
 }

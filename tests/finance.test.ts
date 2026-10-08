@@ -6,6 +6,7 @@ import { parseFilters, transactionWhere, periodRange } from '../src/services/fil
 import { csvCell } from '../src/services/csv';
 import { hashPassword, verifyPassword } from '../src/lib/password';
 import { decryptCredential, encryptCredential } from '../src/lib/credential-vault';
+import { alertDefaults, detectTransactionAlertTypes } from '../src/services/alerts';
 const movement = (amount = 1200) => ({
   id: 'mov_test',
   amount,
@@ -191,5 +192,22 @@ describe('Adaptador Fintoc', () => {
   it('rechaza configuraciones sin API key', async () => {
     const provider = new FintocBankingProvider('');
     await expect(provider.getConnections()).rejects.toBeInstanceOf(ProviderError);
+  });
+});
+
+describe('Alertas financieras', () => {
+  const debit = normalizeMovement({ ...movement(-15_000_000), status: 'confirmed' });
+
+  it('detecta pagos de monto elevado', () => {
+    expect(detectTransactionAlertTypes(debit, alertDefaults, false)).toContain('LARGE_PAYMENT');
+  });
+
+  it('detecta pagos relevantes a una contraparte nueva', () => {
+    expect(detectTransactionAlertTypes(debit, alertDefaults, true)).toContain('UNUSUAL_PAYMENT');
+  });
+
+  it('detecta pagos rechazados por el proveedor', () => {
+    const rejected = normalizeMovement({ ...movement(-1000), status: 'rejected' });
+    expect(detectTransactionAlertTypes(rejected, alertDefaults, false)).toContain('PAYMENT_FAILED');
   });
 });

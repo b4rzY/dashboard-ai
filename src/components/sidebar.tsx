@@ -22,6 +22,7 @@ const links = [
   ['/transactions', 'Movimientos', ArrowLeftRight],
   ['/cashflow', 'Flujo de caja', ChartNoAxesCombined],
   ['/connections', 'Conexiones', Plug],
+  ['/alerts', 'Alertas', Bell],
   ['/settings', 'Configuración', Settings],
 ] as const;
 export function Sidebar({ name, role }: { name: string; role: string }) {
@@ -73,10 +74,6 @@ export function Sidebar({ name, role }: { name: string; role: string }) {
         <span>
           <CalendarClock size={18} />
           Forecast
-        </span>
-        <span>
-          <Bell size={18} />
-          Alertas
         </span>
       </div>
       <div className="sidebar-bottom">

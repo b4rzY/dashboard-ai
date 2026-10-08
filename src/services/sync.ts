@@ -6,6 +6,7 @@ import type { BankingProvider, ProviderTransaction, ProviderAccount } from '@/pr
 import { Prisma } from '@prisma/client';
 import { persistTransactions } from './transaction-store';
 import { decryptCredential } from '@/lib/credential-vault';
+import { createSyncFailureAlert, createTransactionAlerts } from './alerts';
 export function safeSyncError(error: unknown) {
   return error instanceof ProviderError
     ? error.message
@@ -21,7 +22,13 @@ export async function syncConnection(
   providerOverride?: BankingProvider,
   accountId?: string,
 ) {
-  const connection = await db.bankConnection.findUniqueOrThrow({ where: { id: connectionId } });
+  const connection = await db.bankConnection.findUniqueOrThrow({
+    where: { id: connectionId },
+    include: {
+      company: { select: { holdingId: true, displayName: true } },
+      institution: { select: { name: true } },
+    },
+  });
   if (connection.provider === 'MANUAL' && !providerOverride) return { skipped: true, processed: 0 };
   if (connection.provider !== 'FINTOC' && !providerOverride)
     throw new ProviderError(0, 'Proveedor aún no implementado');
@@ -122,7 +129,20 @@ export async function syncConnection(
             create: { ...data, connectionId, providerAccountId: account.id },
             update: data,
           });
-          processed += await persistTransactions(tx, stored.id, transactions);
+          const storedTransactions = await persistTransactions(tx, stored.id, transactions);
+          processed += storedTransactions.inserted;
+          await createTransactionAlerts(
+            tx,
+            {
+              holdingId: connection.company.holdingId,
+              companyId: connection.companyId,
+              companyName: connection.company.displayName,
+              connectionId,
+              bankName: connection.institution.name,
+              accountId: stored.id,
+            },
+            transactions,
+          );
           // A current import is not evidence of a fresh bank balance.
           if (account.refreshedAt && account.active) {
             const day = new Date(account.refreshedAt.toISOString().slice(0, 10));
@@ -186,6 +206,22 @@ export async function syncConnection(
       where: { id: run.id },
       data: { finishedAt: new Date(), errorMessage: message },
     });
+    try {
+      await db.$transaction((tx) =>
+        createSyncFailureAlert(tx, {
+          holdingId: connection.company.holdingId,
+          companyId: connection.companyId,
+          companyName: connection.company.displayName,
+          connectionId,
+          bankName: connection.institution.name,
+          message,
+        }),
+      );
+    } catch (alertError) {
+      console.error(
+        JSON.stringify({ event: 'alert_creation_failed', connectionId, error: safeSyncError(alertError) }),
+      );
+    }
     console.error(JSON.stringify({ event: 'bank_sync_failed', connectionId, error: message }));
     throw new ProviderError(error instanceof ProviderError ? error.status : 0, message);
   }

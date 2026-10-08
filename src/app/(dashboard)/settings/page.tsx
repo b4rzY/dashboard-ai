@@ -1,6 +1,6 @@
 import { requireUser } from '@/lib/auth';
 import { PageTitle } from '@/components/dashboard';
-import { ShieldCheck, Layers, CalendarClock, Bell } from 'lucide-react';
+import { ShieldCheck, Layers, CalendarClock } from 'lucide-react';
 import { db } from '@/lib/db';
 export default async function Page() {
   const user = await requireUser();
@@ -91,11 +91,6 @@ export default async function Page() {
             title: 'Forecast',
             icon: CalendarClock,
             text: 'Proyección de caja a 7, 30, 60 y 90 días con información del ERP.',
-          },
-          {
-            title: 'Alertas',
-            icon: Bell,
-            text: 'Reglas de saldo, egresos relevantes y conexiones desactualizadas.',
           },
         ].map((m) => (
           <section className="panel settings-panel" key={m.title}>
