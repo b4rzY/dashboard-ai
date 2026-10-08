@@ -9,6 +9,7 @@ import { Status } from '@/components/status';
 import { SyncButton } from '@/components/sync-button';
 import { Empty } from '@/components/tables';
 import { CredentialButton } from '@/components/credential-button';
+import { SyncAllButton } from '@/components/sync-all-button';
 export default async function Page({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const user = await requireUser(),
     filters = parseFilters(await searchParams);
@@ -38,6 +39,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
       <PageTitle
         title="Conexiones bancarias"
         description="Identifica problemas de acceso y controla la actualización de tus cuentas."
+        action={user.role === 'ADMIN' ? <SyncAllButton /> : undefined}
       />
       <Filters options={options} filters={filters} />
       <div className="connection-summary">
