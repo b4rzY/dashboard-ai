@@ -8,6 +8,7 @@ import { PageTitle } from '@/components/dashboard';
 import { Status } from '@/components/status';
 import { SyncButton } from '@/components/sync-button';
 import { Empty } from '@/components/tables';
+import { CredentialButton } from '@/components/credential-button';
 export default async function Page({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const user = await requireUser(),
     filters = parseFilters(await searchParams);
@@ -99,10 +100,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                     </td>
                     {user.role === 'ADMIN' && (
                       <td>
-                        <SyncButton
-                          id={c.id}
-                          disabled={c.provider === 'MANUAL' || c.status === 'SYNCING'}
-                        />
+                        <div className="connection-actions">
+                          <SyncButton
+                            id={c.id}
+                            disabled={c.provider === 'MANUAL' || c.status === 'SYNCING'}
+                          />
+                          {c.provider === 'FINTOC' && (
+                            <CredentialButton
+                              id={c.id}
+                              configured={Boolean(c.credentialCiphertext || c.credentialKey)}
+                            />
+                          )}
+                        </div>
                       </td>
                     )}
                   </tr>

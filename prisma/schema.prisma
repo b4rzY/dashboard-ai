@@ -1,11 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "client"
 }
+
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
+
 enum Provider {
   FINTOC
   CLAY
@@ -13,273 +15,313 @@ enum Provider {
   MANUAL
   OTHER
 }
+
 enum ConnectionStatus {
   CONNECTED
   SYNCING
   NEEDS_ATTENTION
   ERROR
 }
+
 enum Role {
   ADMIN
   FINANCE
   VIEWER
 }
+
 enum TransactionType {
   CREDIT
   DEBIT
 }
+
 enum JobStatus {
   PENDING
   RUNNING
   COMPLETED
   FAILED
 }
+
 model Holding {
-  id String @id @default(cuid())
-  name String
+  id        String    @id @default(cuid())
+  name      String
   companies Company[]
-  users User[]
+  users     User[]
 }
+
 model Company {
-  id String @id @default(cuid())
-  holdingId String
-  holding Holding @relation(fields: [holdingId], references: [id])
-  rut String? @unique
-  legalName String
-  displayName String
-  active Boolean @default(true)
-  connections BankConnection[]
-  accounts BankAccount[]
-  invoices Invoice[]
-  receivables AccountsReceivable[]
-  payables AccountsPayable[]
+  id             String               @id @default(cuid())
+  holdingId      String
+  holding        Holding              @relation(fields: [holdingId], references: [id])
+  rut            String?              @unique
+  legalName      String
+  displayName    String
+  active         Boolean              @default(true)
+  connections    BankConnection[]
+  accounts       BankAccount[]
+  invoices       Invoice[]
+  receivables    AccountsReceivable[]
+  payables       AccountsPayable[]
   erpConnections ERPConnection[]
+
   @@index([holdingId, active])
 }
+
 model BankInstitution {
-  id String @id @default(cuid())
-  providerInstitutionId String? @unique
-  name String
-  code String @unique
-  logoUrl String?
-  active Boolean @default(true)
-  connections BankConnection[]
-  accounts BankAccount[]
+  id                    String           @id @default(cuid())
+  providerInstitutionId String?          @unique
+  name                  String
+  code                  String           @unique
+  logoUrl               String?
+  active                Boolean          @default(true)
+  connections           BankConnection[]
+  accounts              BankAccount[]
 }
+
 model BankConnection {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
-  institutionId String
-  institution BankInstitution @relation(fields: [institutionId], references: [id])
-  provider Provider
+  id                   String           @id @default(cuid())
+  companyId            String
+  company              Company          @relation(fields: [companyId], references: [id])
+  institutionId        String
+  institution          BankInstitution  @relation(fields: [institutionId], references: [id])
+  provider             Provider
   providerConnectionId String?
-  credentialKey String? @unique
-  status ConnectionStatus @default(NEEDS_ATTENTION)
+  credentialKey        String?          @unique
+  credentialCiphertext String?
+  status               ConnectionStatus @default(NEEDS_ATTENTION)
   lastSuccessfulSyncAt DateTime?
-  lastAttemptAt DateTime?
-  errorMessage String?
-  leaseUntil DateTime?
-  leaseToken String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  accounts BankAccount[]
-  syncRuns SyncRun[]
-  jobs SyncJob[]
+  lastAttemptAt        DateTime?
+  errorMessage         String?
+  leaseUntil           DateTime?
+  leaseToken           String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  accounts             BankAccount[]
+  syncRuns             SyncRun[]
+  jobs                 SyncJob[]
+
   @@unique([provider, providerConnectionId])
   @@index([companyId, status])
 }
+
 model BankAccount {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
-  connectionId String
-  connection BankConnection @relation(fields: [connectionId], references: [id])
-  institutionId String
-  institution BankInstitution @relation(fields: [institutionId], references: [id])
-  providerAccountId String
+  id                  String            @id @default(cuid())
+  companyId           String
+  company             Company           @relation(fields: [companyId], references: [id])
+  connectionId        String
+  connection          BankConnection    @relation(fields: [connectionId], references: [id])
+  institutionId       String
+  institution         BankInstitution   @relation(fields: [institutionId], references: [id])
+  providerAccountId   String
   accountNumberMasked String
-  accountType String
-  currency String
-  name String
-  currentBalance Decimal @db.Decimal(24, 0)
-  availableBalance Decimal @db.Decimal(24, 0)
-  active Boolean @default(true)
-  lastSyncedAt DateTime?
+  accountType         String
+  currency            String
+  name                String
+  currentBalance      Decimal           @db.Decimal(24, 0)
+  availableBalance    Decimal           @db.Decimal(24, 0)
+  active              Boolean           @default(true)
+  lastSyncedAt        DateTime?
   providerRefreshedAt DateTime?
-  transactions Transaction[]
-  snapshots BalanceSnapshot[]
+  transactions        Transaction[]
+  snapshots           BalanceSnapshot[]
+
   @@unique([connectionId, providerAccountId])
   @@index([companyId, currency, active])
   @@index([institutionId])
 }
+
 model Transaction {
-  id String @id @default(cuid())
-  bankAccountId String
-  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  providerTransactionId String
-  transactionDate DateTime
-  postingDate DateTime
-  description String
-  normalizedDescription String
-  amount Decimal @db.Decimal(24, 0)
-  currency String
-  transactionType TransactionType
-  category String @default("Sin categorizar")
-  counterparty String?
-  reference String?
-  balanceAfterTransaction Decimal? @db.Decimal(24, 0)
-  providerStatus String @default("confirmed")
-  rawMetadata Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  reconciliations Reconciliation[]
+  id                      String           @id @default(cuid())
+  bankAccountId           String
+  bankAccount             BankAccount      @relation(fields: [bankAccountId], references: [id])
+  providerTransactionId   String
+  transactionDate         DateTime
+  postingDate             DateTime
+  description             String
+  normalizedDescription   String
+  amount                  Decimal          @db.Decimal(24, 0)
+  currency                String
+  transactionType         TransactionType
+  category                String           @default("Sin categorizar")
+  counterparty            String?
+  reference               String?
+  balanceAfterTransaction Decimal?         @db.Decimal(24, 0)
+  providerStatus          String           @default("confirmed")
+  rawMetadata             Json?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  reconciliations         Reconciliation[]
+
   @@unique([bankAccountId, providerTransactionId])
   @@index([bankAccountId, postingDate])
   @@index([transactionDate])
   @@index([postingDate, transactionType, providerStatus])
   @@index([providerTransactionId])
 }
+
 model BalanceSnapshot {
-  id String @id @default(cuid())
-  bankAccountId String
-  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  date DateTime @db.Date
-  availableBalance Decimal @db.Decimal(24, 0)
-  currentBalance Decimal @db.Decimal(24, 0)
+  id                String      @id @default(cuid())
+  bankAccountId     String
+  bankAccount       BankAccount @relation(fields: [bankAccountId], references: [id])
+  date              DateTime    @db.Date
+  availableBalance  Decimal     @db.Decimal(24, 0)
+  currentBalance    Decimal     @db.Decimal(24, 0)
   sourceRefreshedAt DateTime
+
   @@unique([bankAccountId, date])
   @@index([date])
 }
+
 model SyncRun {
-  id String @id @default(cuid())
-  connectionId String
-  connection BankConnection @relation(fields: [connectionId], references: [id])
-  startedAt DateTime @default(now())
-  finishedAt DateTime?
-  success Boolean @default(false)
-  transactionsProcessed Int @default(0)
-  errorMessage String?
+  id                    String         @id @default(cuid())
+  connectionId          String
+  connection            BankConnection @relation(fields: [connectionId], references: [id])
+  startedAt             DateTime       @default(now())
+  finishedAt            DateTime?
+  success               Boolean        @default(false)
+  transactionsProcessed Int            @default(0)
+  errorMessage          String?
+
   @@index([connectionId, startedAt])
 }
+
 model SyncJob {
-  id String @id @default(cuid())
-  connectionId String
-  connection BankConnection @relation(fields: [connectionId], references: [id])
-  dedupeKey String @unique
-  status JobStatus @default(PENDING)
-  attempts Int @default(0)
-  nextAttemptAt DateTime @default(now())
-  startedAt DateTime?
-  createdAt DateTime @default(now())
-  errorMessage String?
+  id            String         @id @default(cuid())
+  connectionId  String
+  connection    BankConnection @relation(fields: [connectionId], references: [id])
+  dedupeKey     String         @unique
+  status        JobStatus      @default(PENDING)
+  attempts      Int            @default(0)
+  nextAttemptAt DateTime       @default(now())
+  startedAt     DateTime?
+  createdAt     DateTime       @default(now())
+  errorMessage  String?
+
   @@index([status, nextAttemptAt])
 }
+
 model WebhookEvent {
-  id String @id
-  type String
+  id         String   @id
+  type       String
   receivedAt DateTime @default(now())
 }
+
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  name String
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
   passwordHash String
-  holdingId String
-  holding Holding @relation(fields: [holdingId], references: [id])
-  role Role @default(VIEWER)
-  active Boolean @default(true)
-  sessions Session[]
-  auditLogs AuditLog[]
+  holdingId    String
+  holding      Holding    @relation(fields: [holdingId], references: [id])
+  role         Role       @default(VIEWER)
+  active       Boolean    @default(true)
+  sessions     Session[]
+  auditLogs    AuditLog[]
 }
+
 model Session {
-  id String @id
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
+
   @@index([expiresAt])
 }
+
 model LoginAttempt {
-  key String @id
-  failures Int @default(0)
+  key         String   @id
+  failures    Int      @default(0)
   windowStart DateTime @default(now())
 }
+
 model AuditLog {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id])
-  action String
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
   resourceId String?
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
   @@index([createdAt])
 }
+
 model ERPConnection {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
-  provider String
+  id                String    @id @default(cuid())
+  companyId         String
+  company           Company   @relation(fields: [companyId], references: [id])
+  provider          String
   externalCompanyId String
-  credentialKey String
-  lastSyncedAt DateTime?
+  credentialKey     String
+  lastSyncedAt      DateTime?
+
   @@unique([provider, externalCompanyId])
 }
+
 model Invoice {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
-  provider String
+  id         String    @id @default(cuid())
+  companyId  String
+  company    Company   @relation(fields: [companyId], references: [id])
+  provider   String
   externalId String
-  number String
-  currency String
-  amount Decimal @db.Decimal(24, 0)
-  issuedAt DateTime
-  dueAt DateTime
-  status String
-  payments Payment[]
+  number     String
+  currency   String
+  amount     Decimal   @db.Decimal(24, 0)
+  issuedAt   DateTime
+  dueAt      DateTime
+  status     String
+  payments   Payment[]
+
   @@unique([companyId, provider, externalId])
 }
+
 model AccountsReceivable {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
+  id                String   @id @default(cuid())
+  companyId         String
+  company           Company  @relation(fields: [companyId], references: [id])
   externalInvoiceId String?
-  currency String
-  outstandingAmount Decimal @db.Decimal(24, 0)
-  dueAt DateTime
+  currency          String
+  outstandingAmount Decimal  @db.Decimal(24, 0)
+  dueAt             DateTime
+
   @@index([companyId, dueAt])
 }
+
 model AccountsPayable {
-  id String @id @default(cuid())
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
+  id                String   @id @default(cuid())
+  companyId         String
+  company           Company  @relation(fields: [companyId], references: [id])
   externalInvoiceId String?
-  currency String
-  outstandingAmount Decimal @db.Decimal(24, 0)
-  dueAt DateTime
+  currency          String
+  outstandingAmount Decimal  @db.Decimal(24, 0)
+  dueAt             DateTime
+
   @@index([companyId, dueAt])
 }
+
 model Payment {
-  id String @id @default(cuid())
-  invoiceId String
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
-  amount Decimal @db.Decimal(24, 0)
-  currency String
-  paidAt DateTime
+  id              String           @id @default(cuid())
+  invoiceId       String
+  invoice         Invoice          @relation(fields: [invoiceId], references: [id])
+  amount          Decimal          @db.Decimal(24, 0)
+  currency        String
+  paidAt          DateTime
   reconciliations Reconciliation[]
 }
+
 model Reconciliation {
-  id String @id @default(cuid())
+  id            String      @id @default(cuid())
   transactionId String
-  transaction Transaction @relation(fields: [transactionId], references: [id])
-  paymentId String
-  payment Payment @relation(fields: [paymentId], references: [id])
-  matchedAmount Decimal @db.Decimal(24, 0)
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  paymentId     String
+  payment       Payment     @relation(fields: [paymentId], references: [id])
+  matchedAmount Decimal     @db.Decimal(24, 0)
+
   @@unique([transactionId, paymentId])
 }
+
 model AlertRule {
-  id String @id @default(cuid())
-  holdingId String
-  type String
-  enabled Boolean @default(false)
+  id            String  @id @default(cuid())
+  holdingId     String
+  type          String
+  enabled       Boolean @default(false)
   configuration Json
 }

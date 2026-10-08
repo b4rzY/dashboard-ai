@@ -5,6 +5,7 @@ import { deduplicate } from '../src/services/sync';
 import { parseFilters, transactionWhere, periodRange } from '../src/services/filters';
 import { csvCell } from '../src/services/csv';
 import { hashPassword, verifyPassword } from '../src/lib/password';
+import { decryptCredential, encryptCredential } from '../src/lib/credential-vault';
 const movement = (amount = 1200) => ({
   id: 'mov_test',
   amount,
@@ -80,6 +81,20 @@ describe('Normalización e importes', () => {
   });
 });
 describe('Filtros y seguridad', () => {
+  it('cifra tokens bancarios con autenticación antes de persistirlos', () => {
+    const previous = process.env.CREDENTIAL_ENCRYPTION_KEY;
+    process.env.CREDENTIAL_ENCRYPTION_KEY = Buffer.alloc(32, 7).toString('base64');
+    try {
+      const token = 'link_example_token_private';
+      const encrypted = encryptCredential(token);
+      expect(encrypted).not.toContain(token);
+      expect(decryptCredential(encrypted)).toBe(token);
+      expect(() => decryptCredential(encrypted.slice(0, -1) + 'x')).toThrow();
+    } finally {
+      if (previous === undefined) delete process.env.CREDENTIAL_ENCRYPTION_KEY;
+      else process.env.CREDENTIAL_ENCRYPTION_KEY = previous;
+    }
+  });
   it('valida rangos de fechas y montos', () => {
     expect(() => parseFilters({ from: '2026-10-02', to: '2026-10-01' })).toThrow();
     expect(() => parseFilters({ min: '100', max: '20' })).toThrow();

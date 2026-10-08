@@ -5,6 +5,7 @@ import { FintocBankingProvider, ProviderError } from '@/providers/fintoc';
 import type { BankingProvider, ProviderTransaction, ProviderAccount } from '@/providers/banking';
 import { Prisma } from '@prisma/client';
 import { persistTransactions } from './transaction-store';
+import { decryptCredential } from '@/lib/credential-vault';
 export function safeSyncError(error: unknown) {
   return error instanceof ProviderError
     ? error.message
@@ -24,7 +25,11 @@ export async function syncConnection(
   if (connection.provider === 'MANUAL' && !providerOverride) return { skipped: true, processed: 0 };
   if (connection.provider !== 'FINTOC' && !providerOverride)
     throw new ProviderError(0, 'Proveedor aún no implementado');
-  const credential = connection.credentialKey ? process.env[connection.credentialKey] : undefined;
+  const credential = connection.credentialCiphertext
+    ? decryptCredential(connection.credentialCiphertext)
+    : connection.credentialKey
+      ? process.env[connection.credentialKey]
+      : undefined;
   if (!credential && !providerOverride) {
     await db.bankConnection.update({
       where: { id: connectionId },
@@ -138,12 +143,11 @@ export async function syncConnection(
             });
           }
         }
-        const status = remote.status === 'SYNCING' ? 'NEEDS_ATTENTION' : remote.status;
         await tx.bankConnection.update({
           where: { id: connectionId },
           data: {
             providerConnectionId: remote.id,
-            status,
+            status: remote.status,
             lastSuccessfulSyncAt: now,
             errorMessage:
               remote.status === 'CONNECTED'

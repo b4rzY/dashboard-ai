@@ -13,7 +13,7 @@ El dashboard completo se despliega con OpenNext, incluyendo login, APIs y sincro
 
 Las variables públicas de configuración están en `wrangler.jsonc`: `APP_URL`, `DEMO_MODE=false` y `CLOUDFLARE_WORKER=true`. Cambia `APP_URL` al agregar un dominio y verifica que coincida con el origen del login. No habilites previews con el mismo origen/base de producción.
 
-Guarda en Secrets del Worker: `DATABASE_URL` (URL pooled de Neon con TLS), `CRON_SECRET` (aleatorio, al menos 32 caracteres), `FINTOC_SECRET_KEY`, los `FINTOC_LINK_*` completos y `FINTOC_WEBHOOK_SECRET`. La API Fintoc siempre se consulta en el servidor. Sin credenciales Fintoc el dashboard muestra conexiones pendientes y cero cuentas/movimientos reales.
+Guarda en Secrets del Worker: `DATABASE_URL` (URL pooled de Neon con TLS), `CRON_SECRET` (aleatorio, al menos 32 caracteres), `FINTOC_SECRET_KEY`, `CREDENTIAL_ENCRYPTION_KEY` (32 bytes codificados en base64), los `FINTOC_LINK_*` completos y `FINTOC_WEBHOOK_SECRET`. La API Fintoc siempre se consulta en el servidor. Los administradores pueden reemplazar un link token desde Conexiones; el valor se cifra en PostgreSQL y nunca vuelve al navegador. Sin credenciales Fintoc el dashboard muestra conexiones pendientes y cero cuentas/movimientos reales.
 
 Opcionalmente crea Hyperdrive con la URL directa de Neon, desactiva query caching para evitar saldos o sesiones obsoletos y agrega el binding `HYPERDRIVE` a `wrangler.jsonc`. Su `connectionString` tiene prioridad sobre `DATABASE_URL` para el Worker. Las migraciones administrativas siguen usando una URL real de Neon, no la URL interna de Hyperdrive.
 

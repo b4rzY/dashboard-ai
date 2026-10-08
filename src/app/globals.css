@@ -1143,6 +1143,41 @@ td a:hover {
   white-space: normal;
   margin-top: 8px;
 }
+.connection-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.credential-control {
+  max-width: 310px;
+}
+.credential-control > small {
+  display: block;
+  white-space: normal;
+  margin-top: 8px;
+}
+.credential-form {
+  display: grid;
+  gap: 8px;
+  width: min(310px, 75vw);
+  margin-top: 8px;
+  padding: 12px;
+  background: #f7faf7;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  white-space: normal;
+}
+.credential-form label {
+  font-size: 11px;
+  font-weight: 650;
+}
+.credential-form input {
+  width: 100%;
+  font-size: 12px;
+}
+.credential-form small {
+  font-size: 10px;
+}
 .spin {
   animation: spin 1s linear infinite;
 }

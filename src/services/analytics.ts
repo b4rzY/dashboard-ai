@@ -278,7 +278,9 @@ export async function getAnalytics(f: Filters, holdingId: string) {
       .map((b) => ({ ...b, balance: b.balance.toString() }))
       .sort((a, b) => Number(b.balance) - Number(a.balance)),
     accountCount: accounts.length,
-    connectedCount: accounts.filter((a) => a.connection.status === 'CONNECTED').length,
+    connectedCount: accounts.filter((a) =>
+      ['CONNECTED', 'SYNCING'].includes(a.connection.status),
+    ).length,
     staleCount: accounts.filter((a) => a.stale).length,
     lastSyncedAt: last._max.lastSuccessfulSyncAt?.toISOString() ?? null,
     series,
