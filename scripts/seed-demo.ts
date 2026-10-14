@@ -12,10 +12,9 @@ const names = [
   'RRHI',
   'DCE Inversiones',
   'Inversiones Costa',
-  'Mantagua',
 ];
 const bankNames = ['Banco de Chile', 'BCI', 'BICE', 'Itaú', 'Santander', 'Global66'];
-const counts = [4, 3, 3, 3, 2, 3, 2, 2, 2];
+const counts = [4, 3, 3, 3, 2, 3, 2, 2];
 const descriptions = [
   'Abono cliente · Factura',
   'Pago proveedor · Servicios',

@@ -10,7 +10,6 @@ const names = [
   ['gozo', 'Gozo Chile', 'Gozo Chile SpA'],
   ['dce', 'DCE Inversiones', 'DCE Inversiones SpA'],
   ['costa', 'Inversiones Costa', 'Inversiones Costa SpA'],
-  ['mantagua', 'Mantagua', 'Inversiones Hoteleras Mantagua'],
   ['mixes', 'Mixes', 'Mixes SpA'],
 ];
 const banks = [
@@ -31,7 +30,6 @@ const configs = [
   ['eventure', 'bci', 'EVENTURE_BCI'],
   ['costa', 'bci', 'COSTA_BCI'],
   ['costa', 'chile', 'COSTA_CHILE'],
-  ['mantagua', 'itau', 'MANTAGUA_ITAU'],
   ['mixes', 'itau', 'MIXES_ITAU'],
 ];
 async function main() {
@@ -86,7 +84,7 @@ async function main() {
     });
   }
   console.log(
-    'Holding, 10 empresas y 13 conexiones registradas. Faltan credenciales si no están configuradas.',
+    'Holding, 9 empresas y 12 conexiones registradas. Faltan credenciales si no están configuradas.',
   );
 }
 main().finally(() => db.$disconnect());
