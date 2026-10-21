@@ -68,7 +68,8 @@ export function AlertSettingsForm({ initial }: { initial: Settings }) {
           <input
             type="number"
             min="1"
-            step="100000"
+            step="1"
+            required
             value={settings.largeClp}
             onChange={(event) => setSettings({ ...settings, largeClp: event.target.value })}
           />
@@ -78,7 +79,8 @@ export function AlertSettingsForm({ initial }: { initial: Settings }) {
           <input
             type="number"
             min="1"
-            step="100000"
+            step="1"
+            required
             value={settings.unusualClp}
             onChange={(event) => setSettings({ ...settings, unusualClp: event.target.value })}
           />
