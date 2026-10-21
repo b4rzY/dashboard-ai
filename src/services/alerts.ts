@@ -41,10 +41,7 @@ export async function getAlertSettings(tx: Prisma.TransactionClient, holdingId: 
   const unusual = objectValue(byType.get('UNUSUAL_PAYMENT')?.configuration);
   return {
     syncFailure: booleanValue(byType.get('SYNC_FAILURE')?.enabled, alertDefaults.syncFailure),
-    failedPayment: booleanValue(
-      byType.get('PAYMENT_FAILED')?.enabled,
-      alertDefaults.failedPayment,
-    ),
+    failedPayment: booleanValue(byType.get('PAYMENT_FAILED')?.enabled, alertDefaults.failedPayment),
     largePayment: booleanValue(byType.get('LARGE_PAYMENT')?.enabled, alertDefaults.largePayment),
     unusualPayment: booleanValue(
       byType.get('UNUSUAL_PAYMENT')?.enabled,
@@ -99,6 +96,32 @@ export async function createTransactionAlerts(
   if (!rows.length) return 0;
   const settings = await getAlertSettings(tx, context.holdingId);
   const alerts: Prisma.AlertEventCreateManyInput[] = [];
+  const unusualCandidates = rows.filter((row) => {
+    const amount = BigInt(row.amount) < 0n ? -BigInt(row.amount) : BigInt(row.amount);
+    return (
+      settings.unusualPayment &&
+      row.transactionType === 'DEBIT' &&
+      Boolean(row.counterparty) &&
+      amount >= threshold(settings, row.currency, 'unusual')
+    );
+  });
+  const history = new Map<string, { providerTransactionId: string; postingDate: Date }[]>();
+  const counterparties = [...new Set(unusualCandidates.flatMap((row) => row.counterparty || []))];
+  for (let offset = 0; offset < counterparties.length; offset += 500) {
+    const matches = await tx.transaction.findMany({
+      where: {
+        bankAccountId: context.accountId,
+        counterparty: { in: counterparties.slice(offset, offset + 500) },
+      },
+      select: { counterparty: true, providerTransactionId: true, postingDate: true },
+    });
+    for (const match of matches) {
+      if (!match.counterparty) continue;
+      const entries = history.get(match.counterparty) || [];
+      entries.push(match);
+      history.set(match.counterparty, entries);
+    }
+  }
   for (const row of rows) {
     const amount = BigInt(row.amount) < 0n ? -BigInt(row.amount) : BigInt(row.amount);
     const needsCounterpartyCheck =
@@ -107,16 +130,11 @@ export async function createTransactionAlerts(
       Boolean(row.counterparty) &&
       amount >= threshold(settings, row.currency, 'unusual');
     const previous = needsCounterpartyCheck
-      ? await tx.transaction.count({
-          where: {
-            bankAccountId: context.accountId,
-            counterparty: row.counterparty,
-            providerTransactionId: { not: row.id },
-            postingDate: { lt: row.postingDate },
-          },
-        })
-      : 1;
-    for (const type of detectTransactionAlertTypes(row, settings, previous === 0)) {
+      ? (history.get(row.counterparty || '') || []).some(
+          (match) => match.providerTransactionId !== row.id && match.postingDate < row.postingDate,
+        )
+      : true;
+    for (const type of detectTransactionAlertTypes(row, settings, !previous)) {
       const label = money(amount, row.currency);
       const counterparty = row.counterparty || row.description;
       const shared = {

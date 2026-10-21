@@ -184,7 +184,7 @@ export async function syncConnection(
           data: { success: true, finishedAt: new Date(), transactionsProcessed: processed },
         });
       },
-      { timeout: 120_000 },
+      { timeout: 300_000 },
     );
     console.info(JSON.stringify({ event: 'bank_sync_complete', connectionId, processed }));
     return { skipped: false, processed };
@@ -219,7 +219,11 @@ export async function syncConnection(
       );
     } catch (alertError) {
       console.error(
-        JSON.stringify({ event: 'alert_creation_failed', connectionId, error: safeSyncError(alertError) }),
+        JSON.stringify({
+          event: 'alert_creation_failed',
+          connectionId,
+          error: safeSyncError(alertError),
+        }),
       );
     }
     console.error(JSON.stringify({ event: 'bank_sync_failed', connectionId, error: message }));

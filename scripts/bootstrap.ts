@@ -11,12 +11,14 @@ const names = [
   ['dce', 'DCE Inversiones', 'DCE Inversiones SpA'],
   ['costa', 'Inversiones Costa', 'Inversiones Costa SpA'],
   ['mixes', 'Mixes', 'Mixes SpA'],
+  ['comercial-gc', 'Comercial GC', 'Comercial GC'],
 ];
 const banks = [
   ['chile', 'Banco de Chile', 'cl_banco_de_chile'],
   ['bci', 'BCI', 'cl_banco_bci'],
   ['bice', 'BICE', 'cl_banco_bice'],
   ['itau', 'Itaú', 'cl_banco_itau'],
+  ['santander', 'Banco Santander', 'cl_banco_santander'],
 ];
 const configs = [
   ['ehg', 'chile', 'EHG_CHILE'],
@@ -31,6 +33,7 @@ const configs = [
   ['costa', 'bci', 'COSTA_BCI'],
   ['costa', 'chile', 'COSTA_CHILE'],
   ['mixes', 'itau', 'MIXES_ITAU'],
+  ['comercial-gc', 'santander', 'COMERCIAL_GC_SANTANDER'],
 ];
 async function main() {
   if (process.env.DEMO_MODE === 'true')
@@ -84,7 +87,7 @@ async function main() {
     });
   }
   console.log(
-    'Holding, 9 empresas y 12 conexiones registradas. Faltan credenciales si no están configuradas.',
+    'Holding, 10 empresas y 13 conexiones registradas. Faltan credenciales si no están configuradas.',
   );
 }
 main().finally(() => db.$disconnect());
