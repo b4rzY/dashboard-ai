@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { Check, Monitor, Moon, Sun } from 'lucide-react';
+import { Check, Diamond, Monitor, Moon, Sun } from 'lucide-react';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'light' | 'dark' | 'gold' | 'system';
 const options = [
   { value: 'light', label: 'Claro', icon: Sun },
-  { value: 'dark', label: 'Oscuro', icon: Moon },
+  { value: 'dark', label: 'Azul moderno', icon: Moon },
+  { value: 'gold', label: 'Obsidiana Gold', icon: Diamond },
   { value: 'system', label: 'Sistema', icon: Monitor },
 ] as const;
 
@@ -16,7 +17,7 @@ function subscribe(callback: () => void) {
 }
 function currentTheme(): Theme {
   const value = document.documentElement.dataset.appearance;
-  return value === 'light' || value === 'dark' ? value : 'system';
+  return value === 'light' || value === 'dark' || value === 'gold' ? value : 'system';
 }
 
 export function ThemeSelector() {

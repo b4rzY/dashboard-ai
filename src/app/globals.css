@@ -11,7 +11,7 @@
   --radius: 14px;
 }
 
-:root[data-theme='dark'] {
+:root:is([data-theme='dark'], [data-theme='gold']) {
   color-scheme: dark;
   --ink: #e4e9ef;
   --muted: #a0abba;
@@ -2060,36 +2060,65 @@ td > small,
 .theme-menu button:hover, .theme-menu button:focus-visible { background: var(--background); }
 .theme-menu button[aria-pressed='true'] { background: #176c5315; color: var(--green); }
 
-html[data-theme='dark'] :is(.topbar, .sidebar) { background: #171d27; }
-html[data-theme='dark'] :is(.topbar strong, .select-trigger, .button-outline, .bank-row strong, .distribution-legend strong, .company-details strong, .company-flow strong, .bank-list strong) { color: var(--ink); }
-html[data-theme='dark'] :is(.topbar, .nav-link, .future-nav, .future-nav span, .chart-footer, .chart-footer a, .company-flow, .company-details, .metric-label, .panel-heading p, .distribution-legend, .bank-row small, .company-card-top small, th, .app-footer, .settings-line, .transaction-filter-row label) { color: var(--muted); }
-html[data-theme='dark'] :is(.nav-link:hover, .select-item[data-highlighted], .button-outline:hover, .alert-bell:hover, .alert-event:hover, tbody tr:hover) { background: #252f3d; }
-html[data-theme='dark'] :is(.nav-link.active, .holding-switch, .avatar, .bank-logo, .login-icon, .alert-event-title i) { background: #69d7b216; color: #85e0bf; }
-html[data-theme='dark'] :is(.internal-tag, .category-tag, .currency-tag, th, .login-form-wrap) { background: #202936; color: var(--muted); border-color: var(--line); }
-html[data-theme='dark'] :is(.company-flow, .company-details, .chart-footer, .settings-line, .alert-rule, .alert-event, td) { border-color: var(--line); }
-html[data-theme='dark'] :is(.notice, .demo-banner) { background: #342c1d; border-color: #665331; color: #edca87; }
-html[data-theme='dark'] .notice a { color: #edca87; }
-html[data-theme='dark'] .income { color: #79dcb1; }
-html[data-theme='dark'] .expense { color: #f29b89; }
-html[data-theme='dark'] .stale { color: #edbd6c; }
-html[data-theme='dark'] :is(.status-connected, .color-0) { background: #1b3b32; color: #8ae0bb; }
-html[data-theme='dark'] :is(.status-syncing, .color-1) { background: #23364e; color: #a0c9ff; }
-html[data-theme='dark'] :is(.status-needs_attention, .color-2, .alert-event-icon.warning) { background: #3d311f; color: #f0c478; }
-html[data-theme='dark'] :is(.status-error, .alert-event-icon.critical, .form-error) { background: #402a2d; color: #ffb0a0; border-color: #704047; }
-html[data-theme='dark'] .color-3 { background: #362c48; color: #c8b0eb; }
-html[data-theme='dark'] :is(.alert-event.unread, .alert-event.unread:hover) { background: #1b2e2b; }
-html[data-theme='dark'] .alert-badge { border-color: #171d27; }
-html[data-theme='dark'] .alert-summary .critical { color: #ffb0a0; }
-html[data-theme='dark'] .alert-summary .warning { color: #f0c478; }
-html[data-theme='dark'] .button-primary { color: #10271f; }
-html[data-theme='dark'] .bank-bar { background: #2b3542; }
-html[data-theme='dark'] .cash-hero { background: linear-gradient(115deg, #17372f, #1d4b40 62%, #245a49); }
-html[data-theme='dark'] .theme-menu button[aria-pressed='true'] { background: #69d7b218; }
-html[data-theme='dark'] .skeleton { background: linear-gradient(90deg, #202936, #2b3542, #202936); background-size: 200% 100%; }
-html[data-theme='dark'] .recharts-cartesian-axis-tick text { fill: var(--muted); }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.topbar, .sidebar) { background: #171d27; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.topbar strong, .select-trigger, .button-outline, .bank-row strong, .distribution-legend strong, .company-details strong, .company-flow strong, .bank-list strong) { color: var(--ink); }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.topbar, .nav-link, .future-nav, .future-nav span, .chart-footer, .chart-footer a, .company-flow, .company-details, .metric-label, .panel-heading p, .distribution-legend, .bank-row small, .company-card-top small, th, .app-footer, .settings-line, .transaction-filter-row label) { color: var(--muted); }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.nav-link:hover, .select-item[data-highlighted], .button-outline:hover, .alert-bell:hover, .alert-event:hover, tbody tr:hover) { background: #252f3d; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.nav-link.active, .holding-switch, .avatar, .bank-logo, .login-icon, .alert-event-title i) { background: #69d7b216; color: #85e0bf; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.internal-tag, .category-tag, .currency-tag, th, .login-form-wrap) { background: #202936; color: var(--muted); border-color: var(--line); }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.company-flow, .company-details, .chart-footer, .settings-line, .alert-rule, .alert-event, td) { border-color: var(--line); }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.notice, .demo-banner) { background: #342c1d; border-color: #665331; color: #edca87; }
+html:is([data-theme='dark'], [data-theme='gold']) .notice a { color: #edca87; }
+html:is([data-theme='dark'], [data-theme='gold']) .income { color: #79dcb1; }
+html:is([data-theme='dark'], [data-theme='gold']) .expense { color: #f29b89; }
+html:is([data-theme='dark'], [data-theme='gold']) .stale { color: #edbd6c; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.status-connected, .color-0) { background: #1b3b32; color: #8ae0bb; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.status-syncing, .color-1) { background: #23364e; color: #a0c9ff; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.status-needs_attention, .color-2, .alert-event-icon.warning) { background: #3d311f; color: #f0c478; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.status-error, .alert-event-icon.critical, .form-error) { background: #402a2d; color: #ffb0a0; border-color: #704047; }
+html:is([data-theme='dark'], [data-theme='gold']) .color-3 { background: #362c48; color: #c8b0eb; }
+html:is([data-theme='dark'], [data-theme='gold']) :is(.alert-event.unread, .alert-event.unread:hover) { background: #1b2e2b; }
+html:is([data-theme='dark'], [data-theme='gold']) .alert-badge { border-color: #171d27; }
+html:is([data-theme='dark'], [data-theme='gold']) .alert-summary .critical { color: #ffb0a0; }
+html:is([data-theme='dark'], [data-theme='gold']) .alert-summary .warning { color: #f0c478; }
+html:is([data-theme='dark'], [data-theme='gold']) .button-primary { color: #10271f; }
+html:is([data-theme='dark'], [data-theme='gold']) .bank-bar { background: #2b3542; }
+html:is([data-theme='dark'], [data-theme='gold']) .cash-hero { background: linear-gradient(115deg, #17372f, #1d4b40 62%, #245a49); }
+html:is([data-theme='dark'], [data-theme='gold']) .theme-menu button[aria-pressed='true'] { background: #69d7b218; }
+html:is([data-theme='dark'], [data-theme='gold']) .skeleton { background: linear-gradient(90deg, #202936, #2b3542, #202936); background-size: 200% 100%; }
+html:is([data-theme='dark'], [data-theme='gold']) .recharts-cartesian-axis-tick text { fill: var(--muted); }
 .recharts-default-tooltip { background: var(--surface) !important; border-color: var(--line) !important; color: var(--ink) !important; border-radius: 10px; box-shadow: 0 8px 28px #00000018; }
 .recharts-tooltip-label { color: var(--ink); }
 @media (max-width: 640px) {
   .topbar > span { min-width: 0; }
   .topbar-actions { gap: 10px; flex-shrink: 0; }
 }
+
+/* Obsidiana Gold shares dark-mode contrast while retaining its own warm palette. */
+:root[data-theme='gold'] {
+  color-scheme: dark;
+  --ink: #ece8df;
+  --muted: #aaa69d;
+  --green: #c6ab72;
+  --green-dark: #b6995e;
+  --line: #34312b;
+  --surface: #181b20;
+  --background: #0d0f12;
+}
+html[data-theme='gold'] :is(.topbar, .sidebar) { background: #121418; }
+html[data-theme='gold'] :is(.nav-link:hover, .select-item[data-highlighted], .button-outline:hover, .alert-bell:hover, .alert-event:hover, tbody tr:hover) { background: #25241f; }
+html[data-theme='gold'] :is(.nav-link.active, .holding-switch, .avatar, .bank-logo, .login-icon, .alert-event-title i) { background: #c6ab7215; color: #d8be87; }
+html[data-theme='gold'] :is(.internal-tag, .category-tag, .currency-tag, th, .login-form-wrap) { background: #201f1e; color: var(--muted); border-color: var(--line); }
+html[data-theme='gold'] :is(.alert-event.unread, .alert-event.unread:hover) { background: #25221b; }
+html[data-theme='gold'] .cash-hero { background: radial-gradient(ellipse at top right, #65523533, transparent 65%), linear-gradient(115deg, #211e19, #30291d 62%, #3b3223); border: 1px solid #6e5d393d; }
+html[data-theme='gold'] :is(.cash-value, .cash-meta strong) { color: #f4eddc; }
+html[data-theme='gold'] :is(.eyebrow, .cash-context, .cash-meta, .cash-meta > div, .cash-context .history-note) { color: #c5b895; }
+html[data-theme='gold'] .cash-meta .cash-icon { color: #d8be87; background: #c6ab7210; }
+html[data-theme='gold'] .theme-menu button[aria-pressed='true'] { background: #c6ab7218; }
+html[data-theme='gold'] .button-primary { background: #c6ab72; color: #211c12; }
+html[data-theme='gold'] .button-primary:hover { background: #d6bc87; }
+html[data-theme='gold'] .alert-badge { border-color: #121418; }
+html[data-theme='gold'] .bank-bar { background: #302b23; }
+html[data-theme='gold'] .bank-bar span { background: #bfa66f; }
+html[data-theme='gold'] .skeleton { background: linear-gradient(90deg, #201f1e, #302b23, #201f1e); background-size: 200% 100%; }
+html[data-theme='gold'] .panel, html[data-theme='gold'] .metric { box-shadow: 0 6px 24px #00000012; }
