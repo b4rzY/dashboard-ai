@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/sidebar';
 import Link from 'next/link';
 import { Bell } from 'lucide-react';
 import { db } from '@/lib/db';
+import { ThemeSelector } from '@/components/theme-selector';
 export const dynamic = 'force-dynamic';
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
@@ -22,6 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <strong>Holding Gozo</strong>
           </span>
           <div className="topbar-actions">
+            <ThemeSelector />
             <Link
               href="/alerts"
               className="alert-bell"

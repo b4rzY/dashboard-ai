@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 :root {
+  color-scheme: light;
   --ink: #203a32;
   --muted: #74827e;
   --green: #176c53;
@@ -8,6 +9,17 @@
   --surface: #fff;
   --background: #f5f8f6;
   --radius: 14px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #e4e9ef;
+  --muted: #a0abba;
+  --green: #69d7b2;
+  --green-dark: #43b990;
+  --line: #2d3644;
+  --surface: #1b222d;
+  --background: #11161e;
 }
 * {
   box-sizing: border-box;
@@ -75,7 +87,7 @@ svg {
 }
 input,
 select {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 7px;
   padding: 9px 10px;
@@ -92,7 +104,7 @@ select:focus {
 }
 .sidebar {
   width: 234px;
-  background: #fff;
+  background: var(--surface);
   border-right: 1px solid var(--line);
   position: fixed;
   inset: 0 auto 0 0;
@@ -264,7 +276,7 @@ select:focus {
   align-items: center;
   justify-content: space-between;
   padding: 0 38px;
-  background: #fff;
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   font-size: 12px;
   color: #87948c;
@@ -326,7 +338,7 @@ select:focus {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 11px 13px;
@@ -344,7 +356,7 @@ select:focus {
   justify-content: space-between;
   gap: 14px;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   border-radius: 6px;
   color: #596c61;
   padding: 7px 11px;
@@ -356,7 +368,7 @@ select:focus {
 }
 .select-content {
   z-index: 60;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 5px;
@@ -493,7 +505,7 @@ select:focus {
   margin: 18px 0 24px;
 }
 .metric {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 11px;
   padding: 18px 20px;
@@ -560,7 +572,7 @@ select:focus {
   margin-bottom: 28px;
 }
 .panel {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
@@ -719,7 +731,7 @@ select:focus {
 }
 .company-card {
   display: block;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 11px;
   padding: 19px;
@@ -978,7 +990,7 @@ td a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   border: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 25px;
   gap: 20px;
@@ -1010,7 +1022,7 @@ td a:hover {
 }
 .connection-summary > div {
   flex: 1;
-  background: white;
+  background: var(--surface);
   padding: 23px;
   border: 1px solid var(--line);
   border-radius: 11px;
@@ -1044,7 +1056,7 @@ td a:hover {
   background: var(--green-dark);
 }
 .button-outline {
-  background: white;
+  background: var(--surface);
   border-color: var(--line);
   color: #58705f;
 }
@@ -1887,7 +1899,7 @@ td > small,
   border: 1px solid var(--line);
   border-radius: 10px;
   color: var(--ink);
-  background: white;
+  background: var(--surface);
   display: grid;
   place-items: center;
   transition: border-color 0.15s, background 0.15s;
@@ -1913,7 +1925,7 @@ td > small,
   font-weight: 800;
 }
 .secondary-button {
-  background: white;
+  background: var(--surface);
   color: var(--green);
   border: 1px solid #c9d8cc;
 }
@@ -2008,7 +2020,7 @@ td > small,
   border: 1px solid var(--line);
   border-radius: 7px;
   color: var(--ink);
-  background: white;
+  background: var(--surface);
 }
 .alert-settings-actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
 .alert-settings-actions span { color: var(--muted); font-size: 11px; }
@@ -2024,4 +2036,60 @@ td > small,
   .alert-summary strong { font-size: 20px; }
   .alert-thresholds { grid-template-columns: 1fr; }
   .alert-event { padding: 14px; }
+}
+
+/* Appearance control stays beside notifications on desktop and mobile. */
+.theme-selector { position: relative; }
+.theme-trigger { cursor: pointer; }
+.theme-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 184px;
+  z-index: 100;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 44px #00000026;
+}
+.theme-menu-title { display: block; padding: 8px 10px; color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: 1px; }
+.theme-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); text-align: left; font-size: 13px; }
+.theme-menu button span { flex: 1; }
+.theme-menu button:hover, .theme-menu button:focus-visible { background: var(--background); }
+.theme-menu button[aria-pressed='true'] { background: #176c5315; color: var(--green); }
+
+html[data-theme='dark'] :is(.topbar, .sidebar) { background: #171d27; }
+html[data-theme='dark'] :is(.topbar strong, .select-trigger, .button-outline, .bank-row strong, .distribution-legend strong, .company-details strong, .company-flow strong, .bank-list strong) { color: var(--ink); }
+html[data-theme='dark'] :is(.topbar, .nav-link, .future-nav, .future-nav span, .chart-footer, .chart-footer a, .company-flow, .company-details, .metric-label, .panel-heading p, .distribution-legend, .bank-row small, .company-card-top small, th, .app-footer, .settings-line, .transaction-filter-row label) { color: var(--muted); }
+html[data-theme='dark'] :is(.nav-link:hover, .select-item[data-highlighted], .button-outline:hover, .alert-bell:hover, .alert-event:hover, tbody tr:hover) { background: #252f3d; }
+html[data-theme='dark'] :is(.nav-link.active, .holding-switch, .avatar, .bank-logo, .login-icon, .alert-event-title i) { background: #69d7b216; color: #85e0bf; }
+html[data-theme='dark'] :is(.internal-tag, .category-tag, .currency-tag, th, .login-form-wrap) { background: #202936; color: var(--muted); border-color: var(--line); }
+html[data-theme='dark'] :is(.company-flow, .company-details, .chart-footer, .settings-line, .alert-rule, .alert-event, td) { border-color: var(--line); }
+html[data-theme='dark'] :is(.notice, .demo-banner) { background: #342c1d; border-color: #665331; color: #edca87; }
+html[data-theme='dark'] .notice a { color: #edca87; }
+html[data-theme='dark'] .income { color: #79dcb1; }
+html[data-theme='dark'] .expense { color: #f29b89; }
+html[data-theme='dark'] .stale { color: #edbd6c; }
+html[data-theme='dark'] :is(.status-connected, .color-0) { background: #1b3b32; color: #8ae0bb; }
+html[data-theme='dark'] :is(.status-syncing, .color-1) { background: #23364e; color: #a0c9ff; }
+html[data-theme='dark'] :is(.status-needs_attention, .color-2, .alert-event-icon.warning) { background: #3d311f; color: #f0c478; }
+html[data-theme='dark'] :is(.status-error, .alert-event-icon.critical, .form-error) { background: #402a2d; color: #ffb0a0; border-color: #704047; }
+html[data-theme='dark'] .color-3 { background: #362c48; color: #c8b0eb; }
+html[data-theme='dark'] :is(.alert-event.unread, .alert-event.unread:hover) { background: #1b2e2b; }
+html[data-theme='dark'] .alert-badge { border-color: #171d27; }
+html[data-theme='dark'] .alert-summary .critical { color: #ffb0a0; }
+html[data-theme='dark'] .alert-summary .warning { color: #f0c478; }
+html[data-theme='dark'] .button-primary { color: #10271f; }
+html[data-theme='dark'] .bank-bar { background: #2b3542; }
+html[data-theme='dark'] .cash-hero { background: linear-gradient(115deg, #17372f, #1d4b40 62%, #245a49); }
+html[data-theme='dark'] .theme-menu button[aria-pressed='true'] { background: #69d7b218; }
+html[data-theme='dark'] .skeleton { background: linear-gradient(90deg, #202936, #2b3542, #202936); background-size: 200% 100%; }
+html[data-theme='dark'] .recharts-cartesian-axis-tick text { fill: var(--muted); }
+.recharts-default-tooltip { background: var(--surface) !important; border-color: var(--line) !important; color: var(--ink) !important; border-radius: 10px; box-shadow: 0 8px 28px #00000018; }
+.recharts-tooltip-label { color: var(--ink); }
+@media (max-width: 640px) {
+  .topbar > span { min-width: 0; }
+  .topbar-actions { gap: 10px; flex-shrink: 0; }
 }

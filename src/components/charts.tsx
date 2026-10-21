@@ -44,7 +44,7 @@ export function CashflowChart({ data, currency }: { data: Analytics['series']; c
     <div className="chart" aria-label="Gráfico de ingresos y egresos">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={grouped} barGap={2} margin={{ left: 0, right: 5, top: 18, bottom: 0 }}>
-          <CartesianGrid vertical={false} stroke="#eaf0ee" />
+          <CartesianGrid vertical={false} stroke="var(--line)" />
           <XAxis
             dataKey="date"
             axisLine={false}
@@ -67,8 +67,8 @@ export function CashflowChart({ data, currency }: { data: Analytics['series']; c
             tickFormatter={(v) => money(v, currency, true)}
           />
           <Tooltip
-            cursor={{ fill: '#f4f8f6' }}
-            contentStyle={{ border: '1px solid #e3eae7', borderRadius: 12, fontSize: 13 }}
+            cursor={{ fill: 'var(--background)' }}
+            contentStyle={{ border: '1px solid var(--line)', borderRadius: 12, fontSize: 13 }}
             labelFormatter={(v) => String(v)}
             formatter={(v, name) => [
               money(Number(v), currency),
@@ -109,7 +109,7 @@ export function BalanceChart({ data, currency }: { data: Analytics['history']; c
               <stop offset="1" stopColor="#3c9f7d" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid vertical={false} stroke="#eaf0ee" />
+          <CartesianGrid vertical={false} stroke="var(--line)" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12 }}
